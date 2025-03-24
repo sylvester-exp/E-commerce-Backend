@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny
 from .serializers import ProductListSerializer
 from .serializers import ProductSerializer
 from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
 
 def companies(request):
     return { 
@@ -64,3 +65,32 @@ class HomePageProductListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Product.objects.filter(is_active=True, in_stock=True).order_by('-created')
+    
+
+class ProductListAPIView(ListAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        queryset = Product.objects.filter(is_active=True)
+        category = self.request.query_params.get('category')
+        company = self.request.query_params.get('company')
+        in_stock = self.request.query_params.get('in_stock')
+        price_min = self.request.query_params.get('price_min')
+        price_max = self.request.query_params.get('price_max')
+
+        if category:
+            queryset = queryset.filter(category__name__iexact=category)
+
+        if company:
+            queryset = queryset.filter(company__icontains=company)
+
+        if in_stock:
+            queryset = queryset.filter(in_stock=in_stock.lower() == 'true')
+
+        if price_min:
+            queryset = queryset.filter(price__gte=price_min)
+
+        if price_max:
+            queryset = queryset.filter(price__lte=price_max)
+
+        return queryset
