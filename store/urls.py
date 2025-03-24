@@ -9,6 +9,7 @@ from .views import HomePageProductListView
 app_name = 'store'
 
 urlpatterns = [
+    path('products/homepage/', HomePageProductListView.as_view(), name='homepage_products'),
     path('products/home/', HomePageProductListView.as_view(), name='home_products'),
     path('', views.all_products, name='all_products'),
     path("login/", LoginView.as_view(), name="login"),

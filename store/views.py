@@ -10,6 +10,8 @@ from django.contrib.auth import authenticate
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from .serializers import ProductListSerializer
+from .serializers import ProductSerializer
+from rest_framework.pagination import PageNumberPagination
 
 def companies(request):
     return { 
@@ -49,3 +51,16 @@ class HomePageProductListView(ListAPIView):
     serializer_class = ProductListSerializer
     permission_classes = [AllowAny]
     pagination_class = None
+
+class ProductPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+class HomePageProductListView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+    pagination_class = ProductPagination
+
+    def get_queryset(self):
+        return Product.objects.filter(is_active=True, in_stock=True).order_by('-created')

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Product
+from .models import Product, Category
+from django.conf import settings
 
 User = get_user_model()
 
@@ -25,4 +26,16 @@ class ProductListSerializer(serializers.ModelSerializer):
             'image',
             'slug',
             'in_stock',
+        ]
+
+class ProductSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
+    created_by = serializers.StringRelatedField()
+
+    class Meta:
+        model = Product
+        fields = [
+            'id', 'category', 'created_by', 'prod_title', 'company',
+            'description', 'image', 'slug', 'price',
+            'in_stock', 'is_active', 'created', 'updated'
         ]
