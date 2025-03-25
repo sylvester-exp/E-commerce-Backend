@@ -3,7 +3,15 @@ from .models import Category, Product
 from .serializers import RegisterSerializer
 from rest_framework import generics
 from django.contrib.auth import get_user_model
-from .serializers import RegisterSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+from rest_framework.generics import ListAPIView
+from store.serializers import ProductListSerializer
+from store.serializers import ProductSerializer
+
+
 
 def companies(request):
     return { 
@@ -14,12 +22,6 @@ def all_products(request):
     products = Product.objects.all()
     return render(request, 'store/home.html', {'products': products})
 
-
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
 
 class LoginView(APIView):
     def post(self, request):
@@ -43,3 +45,46 @@ User = get_user_model()
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+class ProductListAPIView(ListAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        queryset = Product.objects.filter(is_active=True)
+        category = self.request.query_params.get('category')
+        company = self.request.query_params.get('company')
+        in_stock = self.request.query_params.get('in_stock')
+        price_min = self.request.query_params.get('price_min')
+        price_max = self.request.query_params.get('price_max')
+
+        if category:
+            queryset = queryset.filter(category__name__iexact=category)
+
+        if company:
+            queryset = queryset.filter(company__icontains=company)
+
+        if in_stock:
+            queryset = queryset.filter(in_stock=in_stock.lower() == 'true')
+
+        if price_min:
+            queryset = queryset.filter(price__gte=price_min)
+
+        if price_max:
+            queryset = queryset.filter(price__lte=price_max)
+
+        return queryset
+    
+    def get(self, request):
+        queryset = Product.objects.filter(is_active=True)
+
+        # Sorting logic
+        sort_param = request.GET.get('sort')  # e.g., price, -price, created, -created
+        allowed_sort_fields = ['price', 'prod_title', 'created']
+
+        if sort_param:
+            sort_field = sort_param.lstrip('-')
+            if sort_field in allowed_sort_fields:
+                queryset = queryset.order_by(sort_param)
+
+        serializer = ProductSerializer(queryset, many=True)
+        return Response(serializer.data)

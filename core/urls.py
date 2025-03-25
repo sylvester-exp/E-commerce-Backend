@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from store.views import RegisterView
 from django.http import JsonResponse
 
 def api_home(request):
@@ -27,7 +26,8 @@ def api_home(request):
 urlpatterns = [
     path('', api_home),  # Default homepage
     path('admin/', admin.site.urls),
-    path('api/auth/', include('store.urls')),
+    path('api/auth/', include('store.auth_urls')),
+    path('', include('homepage.urls')), 
 ]
 
 if settings.DEBUG:
