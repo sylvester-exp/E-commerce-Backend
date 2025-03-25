@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_extensions',
     'homepage',
-    
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -144,6 +144,11 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Allow frontend to access Django API

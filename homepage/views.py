@@ -3,14 +3,13 @@ from rest_framework.permissions import AllowAny
 from store.serializers import ProductListSerializer
 from store.serializers import ProductSerializer
 from rest_framework.pagination import PageNumberPagination
-from django.db.models import Q
-from django.db.models import F
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from store.models import Product
-from rest_framework import generics
+from rest_framework import generics, filters
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class HomePageView(APIView):
@@ -22,6 +21,12 @@ class HomePageProductListAPIView(ListAPIView):
     serializer_class = ProductListSerializer
     permission_classes = [AllowAny]
     pagination_class = None
+
+     # Add filtering, search, pagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'in_stock', 'price']
+    search_fields = ['prod_title', 'description', 'company']
+    ordering_fields = ['price', 'created', 'updated']
 
 class ProductPagination(PageNumberPagination):
     page_size = 10
