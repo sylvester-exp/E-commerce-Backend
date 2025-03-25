@@ -1,50 +1,41 @@
-from django.shortcuts import render
-from .models import Category, Product
-from .serializers import RegisterSerializer
-from rest_framework import generics
-from django.contrib.auth import get_user_model
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
 from store.serializers import ProductListSerializer
 from store.serializers import ProductSerializer
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
+from django.db.models import F
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from store.models import Product
+from rest_framework import generics
+from django.http import JsonResponse
+from rest_framework.views import APIView
 
 
+class HomePageView(APIView):
+    def get(self, request):
+        return JsonResponse({"message": "Welcome to the Homepage API"})
+    
+class HomePageProductListAPIView(ListAPIView):
+    queryset = Product.objects.filter(is_active=True, in_stock=True).order_by('-created')
+    serializer_class = ProductListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
 
-def companies(request):
-    return { 
-        'companies': Category.objects.all
-    }
+class ProductPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
-def all_products(request):
-    products = Product.objects.all()
-    return render(request, 'store/home.html', {'products': products})
+class HomePageProductListView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+    pagination_class = ProductPagination
 
-
-class LoginView(APIView):
-    def post(self, request):
-        email = request.data.get("email")  # Changed from username to email
-        password = request.data.get("password")
-        user = authenticate(email=email, password=password)
-
-
-        if user:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-            })
-
-        return Response({"error": "Invalid credentials"}, status=400)
-
-
-User = get_user_model()
-
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+    def get_queryset(self):
+        return Product.objects.filter(is_active=True, in_stock=True).order_by('-created')
+    
 
 class ProductListAPIView(ListAPIView):
     serializer_class = ProductSerializer
@@ -88,3 +79,8 @@ class ProductListAPIView(ListAPIView):
 
         serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data)
+
+from django.http import JsonResponse
+
+def api_home(request):
+    return JsonResponse({"message": "Welcome to the Homepage API"})
