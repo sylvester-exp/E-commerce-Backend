@@ -17,8 +17,8 @@ A simple Django-based authentication API that uses JWT for secure login and toke
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/sylvester-exp/Login_API.git
-   cd Login_API
+   git clone https://github.com/sylvester-exp//E-commerce-Backend.git
+   cd E-commerce-Backend
    ```
 
 2. **Create a virtual environment**
