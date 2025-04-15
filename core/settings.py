@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     'corsheaders',
+    'import_export',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'homepage',
     'django_filters',
+    
 ]
 
 MIDDLEWARE = [
@@ -171,3 +173,4 @@ CORS_ALLOW_HEADERS = [  # Allow these headers in requests
     "X-CSRFToken"
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

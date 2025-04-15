@@ -7,6 +7,7 @@ from homepage.views import HomePageProductListView
 
 
 
+
 urlpatterns = [
     path('', HomePageView.as_view(), name='homepage'),
     path('', views.all_products, name='all_products'),

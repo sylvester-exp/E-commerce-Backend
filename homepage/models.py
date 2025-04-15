@@ -12,19 +12,14 @@ class Category(models.Model):
         return self.name  
     
 
-class Product(models.Model):  
-    category = models.ForeignKey(Category, related_name = 'product', on_delete = models.CASCADE)      
-    created_by = models.ForeignKey( settings.AUTH_USER_MODEL,  on_delete=models.CASCADE, related_name='homepage_products')   
-    prod_title = models.CharField(max_length= 255)
-    company = models.CharField(max_length=255, default='admin')
-    description = models.TextField(blank = True)
-    image = models.ImageField(upload_to='images/')
-    slug = models.SlugField(max_length=255)
-    price = models.DecimalField(max_digits=4, decimal_places=2)
-    in_stock = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
+class Product(models.Model):
+    prod_title = models.CharField(max_length=255)
+    usage = models.CharField(max_length=255, blank=True, null=True)
+    image = models.URLField(max_length=500, blank=True, null=True)  # Use ImageField if you plan file uploads
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    subcategory = models.CharField(max_length=100, blank=True, null=True)
+    colour = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now= True)
 
 
 

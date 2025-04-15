@@ -6,23 +6,25 @@ class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id',
-            'prod_title',
-            'company',
-            'price',
-            'image',
-            'slug',
-            'in_stock',
+           'Gender', 'Category', 'ProductType', 'Colour',
+            'Usage', 'ProductTitle', 'Image', 'ImageURL',
+            'price', 
         ]
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
-    created_by = serializers.StringRelatedField()
+    title = serializers.CharField(source='prod_title')
 
     class Meta:
         model = Product
         fields = [
-            'id', 'category', 'created_by', 'prod_title', 'company',
-            'description', 'image', 'slug', 'price',
-            'in_stock', 'is_active', 'created', 'updated'
+             'prod_title', 'usage', 'image', 'price', 'subcategory', 'colour' 
         ]
+
+
+class BulkProductSerializer(serializers.Serializer):
+    products = ProductSerializer(many=True)  # nested serializer
+
+    def create(self, validated_data):
+        product_data = validated_data['products']
+        products = [Product(**item) for item in product_data]
+        return Product.objects.bulk_create(products)
