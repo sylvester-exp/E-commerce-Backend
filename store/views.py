@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate
 from rest_framework.generics import ListAPIView
 from store.serializers import ProductListSerializer
 from store.serializers import ProductSerializer
+from rest_framework import permissions
 
 
 
@@ -88,3 +89,13 @@ class ProductListAPIView(ListAPIView):
 
         serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data)
+    
+class IsRetailer(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'retailer'
+    
+class RetailerOnlyView(APIView):
+    permission_classes = [IsRetailer]
+
+    def get(self, request):
+        return Response ({"message": "Retailer content"})

@@ -52,12 +52,19 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
 
         return self.create_user(email, password, **extra_fields)
-
-
-
+    
+    
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     username = None  # Remove username
+
+    ROLE_CHOICES = [
+        ('customer', 'Customer'),
+        ('retailer', 'Retailer'),
+        ('admin', 'Admin'),
+    ]
+
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default= 'customer')
 
     USERNAME_FIELD = 'email'  # Set email as the login field
     REQUIRED_FIELDS = []  # Remove username requirement
@@ -68,6 +75,9 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
     
+
+
+
 
 class Cart(models.Model):
     user = models.ForeignKey(
