@@ -13,3 +13,4 @@ coverage.xml
 node_modules/
 dist/
 build/
+.env
