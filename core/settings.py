@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'homepage',
     'django_filters',
+    'cart',
     
 ]
 

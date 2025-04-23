@@ -10,6 +10,8 @@ from rest_framework import generics, filters
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
+from homepage.models import Product
+
 
 
 class HomePageView(APIView):
@@ -17,7 +19,7 @@ class HomePageView(APIView):
         return JsonResponse({"message": "Welcome to the Homepage API"})
     
 class HomePageProductListAPIView(ListAPIView):
-    queryset = Product.objects.filter(is_active=True, in_stock=True).order_by('-created')
+    queryset = Product.objects.filter(in_stock=True).order_by('-created')
     serializer_class = ProductListSerializer
     permission_classes = [AllowAny]
     pagination_class = None
@@ -39,14 +41,13 @@ class HomePageProductListView(generics.ListAPIView):
     pagination_class = ProductPagination
 
     def get_queryset(self):
-        return Product.objects.filter(is_active=True, in_stock=True).order_by('-created')
+        return Product.objects.filter(in_stock=True).order_by('-created')
     
 
 class ProductListAPIView(ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        queryset = Product.objects.filter(is_active=True)
         category = self.request.query_params.get('category')
         company = self.request.query_params.get('company')
         in_stock = self.request.query_params.get('in_stock')
@@ -71,7 +72,7 @@ class ProductListAPIView(ListAPIView):
         return queryset
     
     def get(self, request):
-        queryset = Product.objects.filter(is_active=True)
+        queryset = Product.objects.filter(in_stock=True)
 
         # Sorting logic
         sort_param = request.GET.get('sort')  # e.g., price, -price, created, -created

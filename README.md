@@ -1,127 +1,112 @@
-# 🛡️ Django Login API
+# 🛒 E-commerce Backend
 
-A simple Django-based authentication API that uses JWT for secure login and token management.
+A production-ready Django REST Framework backend for an e-commerce platform that connects customers with multiple retailers. Includes support for authentication, product listings, shopping carts, and more.
+
+---
+
+## 📖 Project Overview
+
+This backend is built using Django and Django REST Framework to provide core API functionality for an e-commerce application. It supports:
+- Token-based authentication (JWT)
+- Product management with filtering, sorting, and search
+- Customer shopping cart features
+- API endpoints structured for frontend integration
+- SQLite for development; production-ready setup
+
+---
 
 ## ✨ Features
 
-- User authentication using JWT tokens
-- Secure login endpoint
-- Token refresh endpoint
-- Django REST Framework integration
-- Supports frontend authentication requests
-- 📦 Homepage API with product listing, filtering, searching, and pagination
+- JWT-based user authentication
+- RESTful API endpoints
+- Product creation, listing, and filtering
+- Shopping cart with item add/remove/clear
+- Admin panel integration for store managers
+- Easily extendable product model with fields like `price`, `stock`, `subcategory`, `colour`, `usage`
 
 ---
 
 ## ⚙️ Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/sylvester-exp//E-commerce-Backend.git
-   cd E-commerce-Backend
-   ```
-
-2. **Create a virtual environment**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Run migrations**
-   ```bash
-   python manage.py migrate
-   ```
-
-5. **Run the development server**
-   ```bash
-   python manage.py runserver
-   ```
-
----
-
-## 🔐 Authentication API Endpoints
-
-| Method | Endpoint             | Description                          |
-|--------|----------------------|--------------------------------------|
-| POST   | `/api/auth/login/`   | Logs in a user and returns JWT token |
-| POST   | `/api/auth/refresh/` | Refreshes the access token           |
-| POST   | `/api/auth/register/`| Registers a new user                 |
-
----
-
-## 🏡 Homepage API – Product Listing
-
-This API serves **paginated**, **searchable**, and **filterable** product listings to be displayed on the homepage of the eCommerce application.
-
-### 📍 Endpoint
-
-| Method | Endpoint                 | Description                          |
-|--------|--------------------------|--------------------------------------|
-| GET    | `/products/homepage/`    | Returns a paginated product list for homepage |
-
-### 🔍 Features
-
-- ✅ Filtering by:
-  - Category
-  - In stock status
-  - Active status
-- 🔎 Searchable by:
-  - Title
-  - Company
-- 📄 Pagination support:
-  - `page` and `page_size` query params
-
-### 🔧 Example Query
-
-```
-GET /products/homepage/?search=laptop&category=electronics&page=1&page_size=5
-```
-
----
-
-## 💻 Usage Example – Login (cURL)
+To get started with the backend locally:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/auth/login/ \
--H "Content-Type: application/json" \
--d '{"email": "admin@example.com", "password": "admin"}'
-```
+# Clone the repo
+git clone https://github.com/sylvester-exp/E-commerce-Backend
+cd e-commerce-backend
+
+# Create a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # on Windows use .venv\Scripts\activate
+
+# Install dependencies
+python3 -m pip install -r requirements.txt
+
+# Run migrations
+python3 manage.py migrate
+
+# Create a superuser (optional for admin access)
+python3 manage.py createsuperuser
+
+# Start the server
+python3 manage.py runserver
+
+## API Endpoints
+
+### Authentication Endpoints (`store/auth_urls.py`)
+| Method | Endpoint              | Description                     |
+|--------|-----------------------|---------------------------------|
+| POST   | `/api/auth/login/`    | Login user and obtain JWT token. |
+| POST   | `/api/auth/refresh/`  | Refresh JWT token.              |
+| POST   | `/api/auth/register/` | Register a new user.            |
 
 ---
 
-## 🛠 Environment Variables
-
-Create a `.env` file in the root directory with:
-
-```env
-SECRET_KEY='django-insecure-fv_1_(d4v%8qdr_@r1ow+)a-@gq-+9j35^2067a$=gqohb^ozk'
-DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost
-```
-
----
-
-## 🚀 Deployment
-
-The API is live at:
-
-```
-http://127.0.0.1:8000
-```
+### Cart Endpoints (`cart/urls.py`)
+| Method | Endpoint                     | Description                        |
+|--------|------------------------------|------------------------------------|
+| POST   | `/api/cart/add/`             | Add an item to the cart.           |
+| DELETE | `/api/cart/remove/<item_id>/`| Remove an item from the cart.      |
+| GET    | `/api/cart/items/`           | List all items in the cart.        |
+| GET    | `/api/cart/detail/`          | Get cart details.                  |
+| DELETE | `/api/cart/clear/`           | Clear all items from the cart.     |
 
 ---
 
-## 👩🏾‍💻 Contributors
-
-- [Abigail Sylvester](https://github.com/sylvester-exp)
+### Homepage Endpoints (`homepage/urls.py`)
+| Method | Endpoint                     | Description                        |
+|--------|------------------------------|------------------------------------|
+| GET    | `/`                          | View the homepage.                 |
+| GET    | `/products/`                 | List all products.                 |
+| GET    | `/products/homepage/`        | List homepage-specific products.   |
+| GET    | `/products/home/`            | List home-specific products.       |
 
 ---
 
-## 📝 License
+### Password Reset Endpoints (`urls.py`)
+| Method | Endpoint                     | Description                        |
+|--------|------------------------------|------------------------------------|
+| GET    | `/password_reset/`           | Request a password reset.          |
+| GET    | `/password_reset/done/`      | Password reset request confirmation.|
+| GET    | `/reset/<uidb64>/<token>/`   | Confirm password reset token.      |
+| GET    | `/reset/done/`               | Password reset completion page.    |
 
-This project is open-source under the [MIT License](https://opensource.org/licenses/MIT).
+## Authentication
+
+This project uses JWT (JSON Web Tokens) for secure authentication. Once a user logs in using /api/auth/login/, they receive an access and refresh token pair to interact with protected endpoints.
+
+## Technologies Used
+
+Python 3.13
+
+Django 5.1.6
+
+Django REST Framework 3.15.2
+
+djangorestframework-simplejwt 5.x
+
+SQLite (for dev)
+
+pipenv / virtualenv
+
+Created  by Abigail Sylvester

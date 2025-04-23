@@ -20,6 +20,8 @@ class Product(models.Model):
     subcategory = models.CharField(max_length=100, blank=True, null=True)
     colour = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    in_stock = models.BooleanField(default=True)
+
 
 
 
