@@ -11,7 +11,8 @@ from rest_framework.generics import ListAPIView
 from store.serializers import ProductListSerializer
 from store.serializers import ProductSerializer
 from rest_framework import permissions
-
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 
 def companies(request):
@@ -99,3 +100,6 @@ class RetailerOnlyView(APIView):
 
     def get(self, request):
         return Response ({"message": "Retailer content"})
+    
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
