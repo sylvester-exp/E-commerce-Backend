@@ -20,3 +20,4 @@ platformdirs==4.3.6
 certifi==2025.1.31
 distlib==0.3.9
 asgiref==3.8.1              # Async support required by Django
+django-redis==5.3.0
