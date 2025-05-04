@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import Product
+from store.models import Product
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
-
 
 class ProductResource(resources.ModelResource):
     prod_title = fields.Field(attribute='prod_title', column_name='ProductTitle')
@@ -17,6 +16,5 @@ class ProductResource(resources.ModelResource):
         fields = ('prod_title', 'usage', 'image', 'price', 'subcategory', 'colour')
         import_id_fields = ('prod_title',) 
 
-@admin.register(Product)
 class ProductAdmin(ImportExportModelAdmin):
     resource_class = ProductResource

@@ -10,9 +10,12 @@ from rest_framework import generics, filters
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
-from homepage.models import Product
+from django.shortcuts import render
 
 
+def home_page_view(request):
+    products = Product.objects.filter(in_stock=True)
+    return render(request, 'store/home.html', {'products': products})
 
 class HomePageView(APIView):
     def get(self, request):
@@ -24,7 +27,7 @@ class HomePageProductListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     pagination_class = None
 
-     # Add filtering, search, pagination
+     # filtering, search, pagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'in_stock', 'price']
     search_fields = ['prod_title', 'description', 'company']
@@ -74,8 +77,8 @@ class ProductListAPIView(ListAPIView):
     def get(self, request):
         queryset = Product.objects.filter(in_stock=True)
 
-        # Sorting logic
-        sort_param = request.GET.get('sort')  # e.g., price, -price, created, -created
+        # sorting logic
+        sort_param = request.GET.get('sort') 
         allowed_sort_fields = ['price', 'prod_title', 'created']
 
         if sort_param:

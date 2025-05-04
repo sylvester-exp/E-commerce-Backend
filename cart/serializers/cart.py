@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from cart.models import Cart
-from .cart_item import CartItemSerializer  # use relative import
-
-
+from .cart_item import CartItemSerializer  
 
 class CartSerializer(serializers.Serializer):
     id = serializers.UUIDField(read_only=True)

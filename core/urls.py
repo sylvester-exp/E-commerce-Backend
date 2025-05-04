@@ -25,12 +25,13 @@ def api_home(request):
     return JsonResponse({"message": "Welcome to the Login API. Use /api/auth/login/ to authenticate."})
 
 urlpatterns = [
-    path('', api_home),  # Default homepage
     path('admin/', admin.site.urls),
     path('api/auth/', include('store.auth_urls')),
-    path('', include('homepage.urls')), 
+    path('', include('store.urls')), 
+    path('', include('homepage.urls')), #default homepage
 
-     path('password_reset/', auth_views.PasswordResetView.as_view(
+
+    path('password_reset/', auth_views.PasswordResetView.as_view(
             template_name='registration/password_reset_form.html'
         ), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(
@@ -43,11 +44,8 @@ urlpatterns = [
             template_name='registration/password_reset_complete.html'
         ), name='password_reset_complete'),
     path('api/cart/', include('cart.urls', namespace='cart')),
-
-
+    
 ]
-
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

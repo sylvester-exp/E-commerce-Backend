@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category
+from store.models import Product
 from django.conf import settings
 
 class ProductListSerializer(serializers.ModelSerializer):
@@ -20,9 +20,8 @@ class ProductSerializer(serializers.ModelSerializer):
              'prod_title', 'usage', 'image', 'price', 'subcategory', 'colour' 
         ]
 
-
 class BulkProductSerializer(serializers.Serializer):
-    products = ProductSerializer(many=True)  # nested serializer
+    products = ProductSerializer(many=True)  
 
     def create(self, validated_data):
         product_data = validated_data['products']

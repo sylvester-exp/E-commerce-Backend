@@ -3,9 +3,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 
-
-
-
 class Category(models.Model): 
     name = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(max_length=255, unique= True)
@@ -15,8 +12,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name  
-
-
 
 
 class Product(models.Model):
@@ -75,9 +70,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
     
-
-
-
 
 class Cart(models.Model):
     user = models.ForeignKey(

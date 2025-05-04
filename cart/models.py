@@ -3,8 +3,6 @@ from django.conf import settings
 from store.models import Product
 from django.contrib.auth import get_user_model
 
-
-
 class Cart(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='cart_carts')
     created_at = models.DateTimeField(auto_now_add=True)

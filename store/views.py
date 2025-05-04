@@ -6,14 +6,19 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
 from rest_framework.generics import ListAPIView
-from store.serializers import ProductListSerializer
 from store.serializers import ProductSerializer
+from django.contrib.auth import authenticate
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.generics import RetrieveAPIView
+from store.serializers import ProductListSerializer
 
+
+User = get_user_model()
 
 def companies(request):
     return { 
@@ -26,33 +31,34 @@ def all_products(request):
 
 
 class LoginView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
-        email = request.data.get("email")  # Changed from username to email
+        # ← use .data, not .POST, when you send JSON
+        email    = request.data.get("email")
         password = request.data.get("password")
-        user = authenticate(email=email, password=password)
-
-
-        if user:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-            })
-
-        return Response({"error": "Invalid credentials"}, status=400)
-
-
-User = get_user_model()
+        user = authenticate(request, email=email, password=password)
+        if user is None:
+             return Response({"error": "Invalid credentials"}, status=400)
+    
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "refresh": str(refresh),
+            "access":  str(refresh.access_token),
+        })
+    
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
 
 class ProductListAPIView(ListAPIView):
     serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
-        queryset = Product.objects.filter(is_active=True)
+        queryset = Product.objects.all()
         category = self.request.query_params.get('category')
         company = self.request.query_params.get('company')
         in_stock = self.request.query_params.get('in_stock')
@@ -77,7 +83,7 @@ class ProductListAPIView(ListAPIView):
         return queryset
     
     def get(self, request):
-        queryset = Product.objects.filter(is_active=True)
+        queryset = Product.objects.all()
 
         # Sorting logic
         sort_param = request.GET.get('sort')  # e.g., price, -price, created, -created
@@ -101,5 +107,14 @@ class RetailerOnlyView(APIView):
     def get(self, request):
         return Response ({"message": "Retailer content"})
     
+class PublicTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    serializer_class = CustomTokenObtainPairSerializer
+
+class ProductDetailAPIView(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductListSerializer
+    lookup_field = 'pk'
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer

@@ -5,7 +5,6 @@ from django.conf import settings
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 
-
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -30,17 +29,18 @@ class ProductListSerializer(serializers.ModelSerializer):
         ]
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
-    created_by = serializers.StringRelatedField()
 
     class Meta:
         model = Product
         fields = [
-            'id', 'category', 'created_by', 'prod_title', 'company',
-            'description', 'image', 'slug', 'price',
-            'in_stock', 'is_active', 'created', 'updated'
+                  'id',
+                  'prod_title', 
+                  'usage', 
+                  'image', 
+                  'price', 
+                  'subcategory', 
+                  'colour',
         ]
-
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
