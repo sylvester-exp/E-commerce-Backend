@@ -91,6 +91,52 @@ python3 manage.py runserver
 | GET    | `/reset/<uidb64>/<token>/`   | Confirm password reset token.      |
 | GET    | `/reset/done/`               | Password reset completion page.    |
 
+
+##cURL Examples for API testing
+
+# REGISTER
+
+```bash
+curl -i -X POST http://127.0.0.1:8000/api/auth/register/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "new@example.com",
+    "password": "My$ecurePass125”
+  }'
+
+# LOGIN
+
+```bash
+curl -i -X POST http://127.0.0.1:8000/api/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "new5@example.com",
+    "password": "My$ecurePass123"
+  }'
+
+# REFRESH TOKEN
+
+```bash
+curl -i -X POST http://127.0.0.1:8000/api/auth/token/refresh/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh": "<refresh_token_from_login>"
+  }'
+
+# LIST ALL PRODUCTS
+
+```bash
+curl -i http://127.0.0.1:8000/products/ \
+  -H "Authorization: Bearer <access_token_from_login>"
+
+# LIST ONE PRODUCT
+
+# replace 3 with whatever `id` came back in the list call
+```bash
+curl -i http://127.0.0.1:8000/products/3/ \
+  -H "Authorization: Bearer <access_token_from_login>"
+
+
 ## Authentication
 
 This project uses JWT (JSON Web Tokens) for secure authentication. Once a user logs in using /api/auth/login/, they receive an access and refresh token pair to interact with protected endpoints.

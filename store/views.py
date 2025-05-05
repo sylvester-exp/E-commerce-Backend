@@ -1,3 +1,9 @@
+"""""
+store.views
+-----------
+contains API views for listing products, handling login/register etc.
+
+"""""
 from django.shortcuts import render
 from .models import Category, Product
 from .serializers import RegisterSerializer
@@ -54,6 +60,15 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 class ProductListAPIView(ListAPIView):
+
+    """"
+    GET /products/ - returns a filtered, paginated list of products.
+     Query parameters: 
+     - ?in_stock=true/false
+      - ?price_min=
+      - ?price_max=
+      - ?sort=price|prod_title|category
+    """"
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
@@ -86,7 +101,7 @@ class ProductListAPIView(ListAPIView):
         queryset = Product.objects.all()
 
         # Sorting logic
-        sort_param = request.GET.get('sort')  # e.g., price, -price, created, -created
+        sort_param = request.GET.get('sort') 
         allowed_sort_fields = ['price', 'prod_title', 'created']
 
         if sort_param:

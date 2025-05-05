@@ -22,15 +22,24 @@ from django.http import JsonResponse
 from django.contrib.auth import views as auth_views
 
 def api_home(request):
+    """"
+    API root endpoint: returns a JSON message directing the client to login/register endpoints.
+
+    """"
     return JsonResponse({"message": "Welcome to the Login API. Use /api/auth/login/ to authenticate."})
 
+
 urlpatterns = [
+    # admin site 
     path('admin/', admin.site.urls),
+    # authentication endpoints
     path('api/auth/', include('store.auth_urls')),
+    # application URLs
     path('', include('store.urls')), 
-    path('', include('homepage.urls')), #default homepage
+    path('', include('homepage.urls')), # default homepage
+    path('api/cart/', include('cart.urls', namespace='cart')),
 
-
+    # password setup/recovery
     path('password_reset/', auth_views.PasswordResetView.as_view(
             template_name='registration/password_reset_form.html'
         ), name='password_reset'),
@@ -43,7 +52,7 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
             template_name='registration/password_reset_complete.html'
         ), name='password_reset_complete'),
-    path('api/cart/', include('cart.urls', namespace='cart')),
+    
     
 ]
 

@@ -15,6 +15,14 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+
+    """""
+  Core product model for the store app.
+  Each instance maps direcrly to a purchasable item.
+  Fields include title,price etc.
+
+    """""
+
     prod_title = models.CharField(max_length=255)
     usage = models.CharField(max_length=255, blank=True, null=True)
     image = models.URLField(max_length=500, blank=True, null=True)  # Use ImageField if you plan file uploads
@@ -50,6 +58,9 @@ class CustomUserManager(BaseUserManager):
     
     
 class CustomUser(AbstractUser):
+    """"
+  Extends Django's AbstractUser to use email as unique identifier instead of a username.
+    """""
     email = models.EmailField(unique=True)
     username = None  # Remove username
 

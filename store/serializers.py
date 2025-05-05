@@ -8,6 +8,9 @@ from django.contrib.auth import authenticate
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """""
+  Creates a new user by email + password
+    """""
     class Meta:
         model = User
         fields = ['email', 'password']
@@ -17,18 +20,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-class ProductListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = [
-            'id',
-            'prod_title',
-            'price',
-            'image',
-            'in_stock',
-        ]
 
 class ProductSerializer(serializers.ModelSerializer):
+    """"
+  Serializes a flat list of products:
+    """"
 
     class Meta:
         model = Product

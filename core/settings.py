@@ -16,6 +16,8 @@ import os
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# load environment variables from .env in development
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings \
@@ -24,9 +26,9 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-load_dotenv()
-
+# !!! keep the secret key used in production secret !!!
 SECRET_KEY = os.getenv('SECRET_KEY')
+# DEBUG mode should be False in production
 DEBUG = os.getenv('DEBUG') == 'True'
 
 DATABASES = {

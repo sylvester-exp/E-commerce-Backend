@@ -14,6 +14,9 @@ from django.shortcuts import render
 
 
 def home_page_view(request):
+    """"
+    Renders the public homepage with featured categories and product previews
+    """"
     products = Product.objects.filter(in_stock=True)
     return render(request, 'store/home.html', {'products': products})
 

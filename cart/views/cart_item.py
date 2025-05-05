@@ -8,7 +8,9 @@ from store.models import Product
 
 
 
-
+"""""
+Manages cart items for authenticated users. Supports listing, adding, and removing items from the shopping cart.
+"""""
 
 class AddToCartView(APIView):
     permission_classes = [IsAuthenticated]
