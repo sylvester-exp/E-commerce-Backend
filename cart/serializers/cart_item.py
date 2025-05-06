@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from store.serializers import ProductListSerializer
+from homepage.serializers import ProductListSerializer
 
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductListSerializer(read_only=True)
