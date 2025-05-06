@@ -22,6 +22,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import RetrieveAPIView
 from homepage.serializers import ProductListSerializer
+from homepage.views import ProductPageNumberPagination
 
 
 User = get_user_model()
@@ -71,6 +72,7 @@ class ProductListAPIView(ListAPIView):
     """
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
+    pagination_class = ProductPageNumberPagination
 
     def get_queryset(self):
         queryset = Product.objects.all()
