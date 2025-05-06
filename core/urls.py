@@ -22,10 +22,12 @@ from django.http import JsonResponse
 from django.contrib.auth import views as auth_views
 
 def api_home(request):
-    """"
-    API root endpoint: returns a JSON message directing the client to login/register endpoints.
 
-    """"
+    """
+    API root endpoint: returns a JSON message directing the client to login/register endpoints.
+    
+    """
+    
     return JsonResponse({"message": "Welcome to the Login API. Use /api/auth/login/ to authenticate."})
 
 

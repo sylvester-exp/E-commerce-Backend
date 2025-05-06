@@ -22,9 +22,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    """"
+    """
   Serializes a flat list of products:
-    """"
+    """
 
     class Meta:
         model = Product
