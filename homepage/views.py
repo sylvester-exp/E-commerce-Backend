@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import render
+from rest_framework.pagination import CursorPagination
 
 
 def home_page_view(request):
@@ -36,19 +37,20 @@ class HomePageProductListAPIView(ListAPIView):
     search_fields = ['prod_title', 'description', 'company']
     ordering_fields = ['price', 'created', 'updated']
 
-class ProductPagination(PageNumberPagination):
+
+class ProductCursorPagination(CursorPagination):
     page_size = 10
-    page_size_query_param = 'page_size'
+    cursor_query_param = 'cursor'
     max_page_size = 100
+    ordering = 'created'
 
 class HomePageProductListView(generics.ListAPIView):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
-    pagination_class = ProductPagination
+    pagination_class = ProductCursorPagination
 
-    def get_queryset(self):
-        return Product.objects.filter(in_stock=True).order_by('-created')
-    
+
 
 class ProductListAPIView(ListAPIView):
     serializer_class = ProductSerializer
