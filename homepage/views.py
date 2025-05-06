@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
-from store.serializers import ProductListSerializer
+from homepage.serializers import ProductListSerializer
 from store.serializers import ProductSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
