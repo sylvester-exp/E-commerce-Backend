@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class EmailBackend(ModelBackend):
-    """"
+    """
     Custom authentication backend to allow users to log in by email instead of username.
-    """"
+    """
 
     def authenticate(self, request, username=None, email=None, password=None, **kwargs):
         print(">>> EmailBackend.authenticate called with:", "username=", username, "email=", email)

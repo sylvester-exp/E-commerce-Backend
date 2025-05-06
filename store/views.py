@@ -21,7 +21,7 @@ from .serializers import CustomTokenObtainPairSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import RetrieveAPIView
-from store.serializers import ProductListSerializer
+from homepage.serializers import ProductListSerializer
 
 
 User = get_user_model()
