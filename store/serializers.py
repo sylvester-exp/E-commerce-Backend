@@ -8,9 +8,9 @@ from django.contrib.auth import authenticate
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
-    """""
+    """
   Creates a new user by email + password
-    """""
+    """
     class Meta:
         model = User
         fields = ['email', 'password']

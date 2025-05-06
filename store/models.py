@@ -16,12 +16,12 @@ class Category(models.Model):
 
 class Product(models.Model):
 
-    """""
+    """
   Core product model for the store app.
   Each instance maps direcrly to a purchasable item.
   Fields include title,price etc.
 
-    """""
+    """
 
     prod_title = models.CharField(max_length=255)
     usage = models.CharField(max_length=255, blank=True, null=True)

@@ -1,9 +1,9 @@
-"""""
+"""
 store.views
 -----------
 contains API views for listing products, handling login/register etc.
 
-"""""
+"""
 from django.shortcuts import render
 from .models import Category, Product
 from .serializers import RegisterSerializer
