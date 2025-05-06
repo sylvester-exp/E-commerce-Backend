@@ -61,14 +61,14 @@ class RegisterView(generics.CreateAPIView):
 
 class ProductListAPIView(ListAPIView):
 
-    """"
+    """
     GET /products/ - returns a filtered, paginated list of products.
      Query parameters: 
      - ?in_stock=true/false
       - ?price_min=
       - ?price_max=
       - ?sort=price|prod_title|category
-    """"
+    """
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
