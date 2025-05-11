@@ -23,6 +23,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import RetrieveAPIView
 from homepage.serializers import ProductListSerializer
 from homepage.views import ProductPageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
+from homepage.views import ProductPageNumberPagination
+from .filters import ProductFilter
 
 
 User = get_user_model()
@@ -61,58 +67,34 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 class ProductListAPIView(ListAPIView):
+    """
+    GET /products/ 
+    Returns a filtered, paginated list of active products.
 
+    Query params (all optional):
+      - colour=<iexact>       (or color= alias)
+      - usage=<icontains>
+      - price__gte=<min price>
+      - price__lte=<max price>
+      - in_stock=true|false
+      - subcategory=<iexact or contains>
+    Sorting:
+      - ?sort=<field> or ?sort=-<field>
+        allowed sort fields: price, prod_title, created
+    Pagination:
+      - ?page=<n> (10 items/page by default)
     """
-    GET /products/ - returns a filtered, paginated list of products.
-     Query parameters: 
-     - ?in_stock=true/false
-      - ?price_min=
-      - ?price_max=
-      - ?sort=price|prod_title|category
-    """
-    serializer_class = ProductSerializer
+    queryset           = Product.objects.filter()
+    serializer_class   = ProductSerializer
     permission_classes = [AllowAny]
-    pagination_class = ProductPageNumberPagination
+    pagination_class   = ProductPageNumberPagination
 
-    def get_queryset(self):
-        queryset = Product.objects.all()
-        category = self.request.query_params.get('category')
-        company = self.request.query_params.get('company')
-        in_stock = self.request.query_params.get('in_stock')
-        price_min = self.request.query_params.get('price_min')
-        price_max = self.request.query_params.get('price_max')
-
-        if category:
-            queryset = queryset.filter(category__name__iexact=category)
-
-        if company:
-            queryset = queryset.filter(company__icontains=company)
-
-        if in_stock:
-            queryset = queryset.filter(in_stock=in_stock.lower() == 'true')
-
-        if price_min:
-            queryset = queryset.filter(price__gte=price_min)
-
-        if price_max:
-            queryset = queryset.filter(price__lte=price_max)
-
-        return queryset
-    
-    def get(self, request):
-        queryset = Product.objects.all()
-
-        # Sorting logic
-        sort_param = request.GET.get('sort') 
-        allowed_sort_fields = ['price', 'prod_title', 'created']
-
-        if sort_param:
-            sort_field = sort_param.lstrip('-')
-            if sort_field in allowed_sort_fields:
-                queryset = queryset.order_by(sort_param)
-
-        serializer = ProductSerializer(queryset, many=True)
-        return Response(serializer.data)
+    # filtering and ordering setup 
+    filter_backends    = [DjangoFilterBackend, OrderingFilter]
+    filterset_class    = ProductFilter        
+    ordering_fields    = ['price', 'prod_title', 'created']
+    ordering           = ['-created']           
+    ordering_param     = 'sort'         
     
 class IsRetailer(permissions.BasePermission):
     def has_permission(self, request, view):
